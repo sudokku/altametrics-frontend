@@ -1,17 +1,26 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useLoginMutation } from '../../app/apiSlice';
 import { login } from './authSlice';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
     const [useLogin] = useLoginMutation();
+    const [credentials, setCredentials] = useState({ email: '', password: '' });
+    const errors = {
+        email: credentials.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) === null ? 'Invalid email' : '',
+        password: credentials.password.length < 6 ? 'Password must be at least 6 characters' : ''
+    };
+    const isValidForm = errors.email === '' && errors.password === '';
 
-    const handleLogin = async () => {
-        console.log();
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    };
+
+
+    const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
         try {
-            const response = await useLogin({ email, password }).unwrap();
+            const response = await useLogin(credentials).unwrap();
             login({ token: response.token, user: response.user });
             console.log(response);
         } catch (error) {
@@ -21,20 +30,34 @@ const Login = () => {
     };
 
     return (
-        <div>
-            <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Email"
-            />
-            <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-            />
-            <button onClick={handleLogin}>Login</button>
+        <div className='flex min-h-full flex-col justify-center align-baseline px-6 py-12 space-y-4'>
+            <h3 className='font-semibold text-2xl text-center'>Login</h3>
+            <form onSubmit={(e) => handleLogin(e)}>
+                <input
+                    name='email'
+                    type="email"
+                    autoComplete='email'
+                    className='block w-full rounded border border-gray-200 px-3 py-1.5 mt-4'
+                    value={credentials.email}
+                    onChange={(e) => handleInputChange(e)}
+                    placeholder="Email"
+                    required
+                />
+                {errors.email && <span className='text-red-500 text-sm'>{errors.email}</span>}
+                <input
+                    name='password'
+                    type="password"
+                    className='block w-full rounded border border-gray-200 px-3 py-1.5 mt-4'
+                    value={credentials.password}
+                    onChange={(e) => handleInputChange(e)}
+                    placeholder="Password"
+                />
+                {errors.password && <span className='text-red-500 text-sm'>{errors.password}</span>}
+                <button
+                    className='block mx-auto mt-6 w-32 bg-indigo-600 text-white rounded px-3 py-1.5 font-semibold'
+                    disabled={!isValidForm}
+                >Login</button>
+            </form>
         </div>
     );
 };
