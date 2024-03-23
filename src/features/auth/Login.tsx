@@ -1,8 +1,12 @@
 import { FormEvent, useState } from 'react';
 import { useLoginMutation } from '../../app/apiSlice';
 import { login } from './authSlice';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [useLogin] = useLoginMutation();
     const [credentials, setCredentials] = useState({ email: '', password: '' });
     const errors = {
@@ -21,8 +25,8 @@ const Login = () => {
 
         try {
             const response = await useLogin(credentials).unwrap();
-            login({ token: response.token, user: response.user });
-            console.log(response);
+            dispatch(login({ token: response.token, user: response.user }));
+            navigate('/bills');
         } catch (error) {
             // Handle error
             console.error(error);
