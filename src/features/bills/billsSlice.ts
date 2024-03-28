@@ -12,16 +12,12 @@ export interface Bill {
 interface BillsState {
     bills: Bill[];
     loading: boolean;
-    sort: 'asc' | 'desc';
-    sortBy: 'name' | 'amount' | 'dueDate';
     error: string | null;
 }
 
 const initialState: BillsState = {
     bills: [],
     loading: false,
-    sort: 'asc',
-    sortBy: 'name',
     error: null
 };
 
