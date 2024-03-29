@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "./store";
 import { User } from "../features/auth/authSlice";
 import { Bill } from "../features/bills/billsSlice";
+import { Invoice } from "../features/invoices/invoicesSlice";
 
 export interface AuthRequest {
     email: string;
@@ -49,13 +50,13 @@ export const apiSlice = createApi({
         getBills: build.query<Bill[], void>({
             query: () => 'bills'
         }),
-        getBillById: build.query<any, string>({
+        getBillById: build.query<Bill, string>({
             query: (id) => `bills/${id}`
         }),
-        getInvoices: build.query<any[], void>({
+        getInvoices: build.query<Invoice[], void>({
             query: () => 'invoices'
         }),
-        getInvoiceById: build.query<any, string>({
+        getInvoiceById: build.query<Invoice, string>({
             query: (id) => `invoices/${id}`
         }),
     })

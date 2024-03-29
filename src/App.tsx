@@ -5,6 +5,7 @@ import Login from './features/auth/Login';
 import Register from './features/auth/Register';
 import BillsDashboard from './features/bills/BillsDashboard';
 import Home from './components/Home';
+import InvoicesDashboard from './features/invoices/InvoicesDashboard';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route element={<Home />} path='/' />
             <Route element={<BillsDashboard />} path='/bills' />
+            <Route element={<InvoicesDashboard />} path='/invoices' />
           </Route>
           <Route element={<Login />} path="/login" />
           <Route element={<Register />} path="/register" />

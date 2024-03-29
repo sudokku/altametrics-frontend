@@ -18,7 +18,11 @@ const DataTable = <T extends Record<string, any>>({ data, columns, onRowClick }:
                 {data.map((row, index) => (
                     <tr onClick={() => onRowClick(row)} key={index}>
                         {columns.map((column, index) => (
-                            <td className="p-2 border" key={index}>{row[column.key]}</td>
+                            <td className="p-2 border" key={index}>{
+                                column.key === 'dueDate' ?
+                                    new Date(row[column.key] as string).toLocaleDateString() :
+                                    row[column.key]
+                            }</td>
                         ))}
                     </tr>
                 ))}

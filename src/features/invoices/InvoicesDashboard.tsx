@@ -1,66 +1,66 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { useGetBillsQuery } from "../../app/apiSlice";
+import { useGetInvoicesQuery } from "../../app/apiSlice";
 import { useEffect, useState } from "react";
-import { Bill, getBillsFailure, getBillsStart, getBillsSuccess } from "./billsSlice";
+import { Invoice, getInvoicesStart, getInvoicesSuccess, getInvoicesFailure } from "./invoicesSlice";
 import DataTable from "../../components/shared/DataTable";
 import Pagination from "../../components/shared/Pagination";
 import BillInvoiceDetailsPopup from "../../components/shared/BillInvoiceDetailPopup";
 
-const BillsDashboard = () => {
-    const billingState = useSelector((state: RootState) => state.billing);
-    const { data, error, isLoading } = useGetBillsQuery();
+const InvoicesDashboard = () => {
+    const invoicesState = useSelector((state: RootState) => state.invoices);
+    const { data, error, isLoading } = useGetInvoicesQuery();
     const dispatch = useDispatch();
 
-    const tableColumns: { key: keyof Bill, header: string }[] = [
+    const tableColumns: { key: keyof Invoice, header: string }[] = [
         { key: 'dueDate', header: 'Due Date' },
         { key: 'details', header: 'Description' },
         { key: 'amount', header: 'Amount' }
     ];
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const totalPages = Math.ceil(billingState.bills.length / pageSize);
-    const paginatedBills = billingState.bills.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    const totalPages = Math.ceil(invoicesState.invoices.length / pageSize);
+    const paginatedInvoices = invoicesState.invoices.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
     const [showModal, setShowModal] = useState(false);
-    const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
+    const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
     const handlePageSizeChange = (newPageSize: number) => {
         setPageSize(newPageSize);
         setCurrentPage(1);
     }
 
-    const handleBillClick = (bill: Bill) => {
-        setSelectedBill(bill);
+    const handleInvoiceClick = (invoice: Invoice) => {
+        setSelectedInvoice(invoice);
         setShowModal(true);
     }
 
-    const handleBillDetailsClose = () => {
+    const handleInvoiceDetailsClose = () => {
         setShowModal(false);
-        setSelectedBill(null);
+        setSelectedInvoice(null);
     }
 
     useEffect(() => {
         if (isLoading) {
-            dispatch(getBillsStart());
+            dispatch(getInvoicesStart());
             return;
         }
 
         if (!error && data) {
-            dispatch(getBillsSuccess(data));
+            dispatch(getInvoicesSuccess(data));
         } else if (error) {
-            dispatch(getBillsFailure(error));
+            dispatch(getInvoicesFailure(error));
         }
     }, [data, error, isLoading]);
 
 
     return (
         <div>
-            <h1 className="text-lg mb-4 text-center">Bills Dashboard</h1>
+            <h1 className="text-lg mb-4 text-center">Invoices Dashboard</h1>
             <DataTable
-                data={paginatedBills}
+                data={paginatedInvoices}
                 columns={tableColumns}
-                onRowClick={handleBillClick}
+                onRowClick={handleInvoiceClick}
             />
             <br />
             <Pagination
@@ -72,13 +72,13 @@ const BillsDashboard = () => {
             />
             {showModal &&
                 <BillInvoiceDetailsPopup
-                    itemType={'bill'}
-                    id={selectedBill!.id}
-                    onClose={handleBillDetailsClose}
+                    itemType={'invoice'}
+                    id={selectedInvoice!.id}
+                    onClose={handleInvoiceDetailsClose}
                 />
             }
         </div>
     );
 };
 
-export default BillsDashboard;
+export default InvoicesDashboard;
