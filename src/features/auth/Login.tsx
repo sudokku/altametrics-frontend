@@ -26,7 +26,7 @@ const Login = () => {
         try {
             const response = await useLogin(credentials).unwrap();
             dispatch(login({ token: response.token, user: response.user }));
-            navigate('/bills');
+            navigate('/');
         } catch (error) {
             // Handle error
             console.error(error);

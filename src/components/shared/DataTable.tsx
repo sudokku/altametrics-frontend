@@ -5,11 +5,11 @@ type DataTableProps<T> = {
 
 const DataTable = <T extends Record<string, any>>({ data, columns }: DataTableProps<T>) => {
     return (
-        <table>
-            <thead>
+        <table className="table-fixed w-full border border-gray-200 rounded-md">
+            <thead className="bg-gray-200">
                 <tr>
                     {columns.map((column, index) => (
-                        <th key={index}>{column.header}</th>
+                        <th className="py-1" key={index}>{column.header}</th>
                     ))}
                 </tr>
             </thead>
@@ -17,7 +17,7 @@ const DataTable = <T extends Record<string, any>>({ data, columns }: DataTablePr
                 {data.map((row, index) => (
                     <tr key={index}>
                         {columns.map((column, index) => (
-                            <td key={index}>{row[column.key]}</td>
+                            <td className="p-2 border" key={index}>{row[column.key]}</td>
                         ))}
                     </tr>
                 ))}

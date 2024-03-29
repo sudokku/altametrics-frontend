@@ -42,11 +42,12 @@ const BillsDashboard = () => {
 
     return (
         <div>
-            <h1>Bills Dashboard - {totalPages}</h1>
+            <h1 className="text-lg mb-4 text-center">Bills Dashboard</h1>
             <DataTable
                 data={paginatedBills}
                 columns={tableColumns}
             />
+            <br />
             <Pagination
                 page={currentPage}
                 pageSize={pageSize}

@@ -1,8 +1,12 @@
 import { FormEvent, useState } from "react";
 import { useRegisterMutation } from "../../app/apiSlice";
 import { login } from "./authSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const Register = () => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [useRegister] = useRegisterMutation();
     const [credentials, setCredentials] = useState({ email: '', password: '', name: '' });
     const errors = {
@@ -21,7 +25,8 @@ const Register = () => {
 
         try {
             const response = await useRegister(credentials).unwrap();
-            login({ token: response.token, user: response.user });
+            dispatch(login({ token: response.token, user: response.user }));
+            navigate('/');
         } catch (error) {
             // Handle error
             console.error(error);

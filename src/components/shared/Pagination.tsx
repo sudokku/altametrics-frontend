@@ -30,17 +30,19 @@ const Pagination: React.FC<PaginationProps> = ({
     };
 
     return (
-        <div className="flex items-center justify-center space-x-2">
-            <select
-                className="px-2 py-1 border border-gray-300 rounded-md"
-                value={currentPageSize}
-                onChange={handlePageSizeChange}
-            >
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-            </select>
+        <div className="flex items-center space-x-4">
+            <div>
+                <span className='mr-2'>Show:</span>
+                <select
+                    value={currentPageSize}
+                    onChange={handlePageSizeChange}
+                >
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
             {Array(totalPages).fill(null).map((_, index) => (
                 <button
                     key={index}
