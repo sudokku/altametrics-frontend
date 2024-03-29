@@ -34,7 +34,7 @@ const Login = () => {
     };
 
     return (
-        <div className='flex min-h-full flex-col justify-center align-baseline px-6 py-12 space-y-4'>
+        <div className='flex min-h-full max-w-md m-auto flex-col justify-center align-baseline px-6 py-12 space-y-4'>
             <h3 className='font-semibold text-2xl text-center'>Login</h3>
             <form onSubmit={(e) => handleLogin(e)}>
                 <input

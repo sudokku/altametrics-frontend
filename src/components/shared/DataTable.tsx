@@ -1,9 +1,10 @@
 type DataTableProps<T> = {
     data: T[];
     columns: Array<{ key: keyof T; header: string }>;
+    onRowClick: (row: T) => void;
 };
 
-const DataTable = <T extends Record<string, any>>({ data, columns }: DataTableProps<T>) => {
+const DataTable = <T extends Record<string, any>>({ data, columns, onRowClick }: DataTableProps<T>) => {
     return (
         <table className="table-fixed w-full border border-gray-200 rounded-md">
             <thead className="bg-gray-200">
@@ -15,7 +16,7 @@ const DataTable = <T extends Record<string, any>>({ data, columns }: DataTablePr
             </thead>
             <tbody>
                 {data.map((row, index) => (
-                    <tr key={index}>
+                    <tr onClick={() => onRowClick(row)} key={index}>
                         {columns.map((column, index) => (
                             <td className="p-2 border" key={index}>{row[column.key]}</td>
                         ))}

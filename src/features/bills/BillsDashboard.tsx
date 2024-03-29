@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Bill, getBillsFailure, getBillsStart, getBillsSuccess } from "./billsSlice";
 import DataTable from "../../components/shared/DataTable";
 import Pagination from "../../components/shared/Pagination";
+import BillInvoiceDetailsPopup from "../../components/shared/BillInvoiceDetailPopup";
 
 const BillsDashboard = () => {
     const billingState = useSelector((state: RootState) => state.billing);
@@ -21,9 +22,22 @@ const BillsDashboard = () => {
     const totalPages = Math.ceil(billingState.bills.length / pageSize);
     const paginatedBills = billingState.bills.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
+    const [showModal, setShowModal] = useState(false);
+    const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
+
     const handlePageSizeChange = (newPageSize: number) => {
         setPageSize(newPageSize);
         setCurrentPage(1);
+    }
+
+    const handleBillClick = (bill: Bill) => {
+        setSelectedBill(bill);
+        setShowModal(true);
+    }
+
+    const handleBillDetailsClose = () => {
+        setShowModal(false);
+        setSelectedBill(null);
     }
 
     useEffect(() => {
@@ -46,6 +60,7 @@ const BillsDashboard = () => {
             <DataTable
                 data={paginatedBills}
                 columns={tableColumns}
+                onRowClick={handleBillClick}
             />
             <br />
             <Pagination
@@ -55,6 +70,12 @@ const BillsDashboard = () => {
                 onPageChange={(newPage) => setCurrentPage(newPage)}
                 onPageSizeChange={handlePageSizeChange}
             />
+            {showModal &&
+                <BillInvoiceDetailsPopup
+                    item={selectedBill}
+                    onClose={handleBillDetailsClose}
+                />
+            }
         </div>
     );
 };
