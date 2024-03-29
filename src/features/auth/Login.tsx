@@ -14,11 +14,12 @@ const Login = () => {
         password: credentials.password.length < 6 ? 'Password must be at least 6 characters' : ''
     };
     const isValidForm = errors.email === '' && errors.password === '';
+    const [requestError, setRequestError] = useState('');
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
+        setRequestError('');
     };
-
 
     const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -27,9 +28,8 @@ const Login = () => {
             const response = await useLogin(credentials).unwrap();
             dispatch(login({ token: response.token, user: response.user }));
             navigate('/');
-        } catch (error) {
-            // Handle error
-            console.error(error);
+        } catch (error: any) {
+            setRequestError(error.data.message);
         }
     };
 
@@ -47,7 +47,7 @@ const Login = () => {
                     placeholder="Email"
                     required
                 />
-                {errors.email && <span className='text-red-500 text-sm'>{errors.email}</span>}
+                {credentials.email && errors.email && <span className='text-red-500 text-sm'>{errors.email}</span>}
                 <input
                     name='password'
                     type="password"
@@ -57,11 +57,12 @@ const Login = () => {
                     placeholder="Password"
                     required
                 />
-                {errors.password && <span className='text-red-500 text-sm'>{errors.password}</span>}
+                {credentials.password && errors.password && <span className='text-red-500 text-sm'>{errors.password}</span>}
                 <button
-                    className='block mx-auto mt-6 w-32 bg-indigo-600 text-white rounded px-3 py-1.5 font-semibold'
+                    className={`block mx-auto mt-6 w-32 text-white rounded px-3 py-1.5 font-semibold ${isValidForm ? 'bg-indigo-600 cursor-pointer' : 'bg-gray-400 cursor-not-allowed'}`}
                     disabled={!isValidForm}
                 >Login</button>
+                {requestError && <span className='block mt-4 text-red-500 text-md text-center'>{requestError}</span>}
             </form>
         </div>
     );
